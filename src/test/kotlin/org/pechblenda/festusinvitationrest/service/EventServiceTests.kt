@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.Assertions
 import org.junit.runner.RunWith
 
 import org.pechblenda.festusinvitationrest.repository.IEventRepository
@@ -13,6 +14,8 @@ import org.pechblenda.festusinvitationrest.entity.Event
 import org.pechblenda.festusinvitationrest.entity.Team
 import org.pechblenda.festusinvitationrest.entity.User
 import org.pechblenda.festusinvitationrest.repository.ITeamRepository
+import org.pechblenda.exception.NotFoundException
+import org.pechblenda.exception.UnauthenticatedException
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -23,6 +26,7 @@ import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.transaction.annotation.Transactional
 
 import java.util.Date
+import java.util.UUID
 
 @Transactional
 @SpringBootTest
@@ -44,11 +48,45 @@ class EventServiceTests {
 	@Autowired
 	private lateinit var teamRepository: ITeamRepository
 
+	private var restore = true
 	private var eventMount: Event? = null
+	private var userMount: User? = null
+	private var teamMount: Team? = null
 
 	@BeforeAll
 	fun beforeAll() {
-		restoreEvent()
+		val user = User()
+		user.name = "userMock"
+		user.surname = ""
+		user.motherSurname = ""
+		user.userName = "userMock"
+		user.email = "no-real@fake.com"
+		user.password = ""
+		user.enabled = true
+		user.active = true
+		user.photo = ""
+		userMount = userRepository.save(user)
+
+		val team = Team()
+		team.name = "Fake Team"
+		teamMount = teamRepository.save(team)
+
+		val event = Event()
+		event.name = "Fake Event"
+		event.description = "Fake description"
+		event.urlDataBase = "none"
+		event.endPointInvitation = "none"
+		event.primaryColor = ""
+		event.accentColor = "#FFF"
+		event.customTicket = false
+		event.endDate = Date()
+		eventMount = eventRepository.save(event)
+
+		val events = mutableListOf<Event>()
+		events.add(eventMount!!)
+		userMount?.events = events
+		userMount?.team = teamMount
+		userMount = userRepository.save(userMount!!)
 	}
 
 	@BeforeEach
@@ -57,39 +95,9 @@ class EventServiceTests {
 	}
 
 	fun restoreEvent() {
-		if (eventMount == null) {
-			val user = User()
-			user.name = "userMock"
-			user.surname = ""
-			user.motherSurname = ""
-			user.userName = "userMock"
-			user.email = "no-real@fake.com"
-			user.password = ""
-			user.enabled = true
-			user.active = true
-			user.photo = ""
-			val persistedUser = userRepository.save(user)
-
-			val team = Team()
-			team.name = "Fake Team"
-			val persistedTeam = teamRepository.save(team)
-
-			val event = Event()
-			event.name = "Fake Event"
-			event.description = "Fake description"
-			event.urlDataBase = "none"
-			event.endPointInvitation = "none"
-			event.primaryColor = ""
-			event.accentColor = "#FFF"
-			event.customTicket = false
-			event.endDate = Date()
-			eventMount = eventRepository.save(event)
-
-			val events = mutableListOf<Event>()
-			events.add(eventMount!!)
-			persistedUser.events = events
-			persistedUser.team = persistedTeam
-			userRepository.save(persistedUser)
+		if (restore) {
+			userMount?.team = teamMount
+			userRepository.save(userMount!!)
 		}
 	}
 
@@ -115,6 +123,58 @@ class EventServiceTests {
 			((response.body as MutableMap<String, Any>)["data"] as MutableMap<String,Any>)["name"],
 			eventMount?.name
 		)
+	}
+
+	@Test
+	@WithMockUser(username = "userMockBad", password = "pwd", roles = [])
+	fun `test to validate service when throw user not exist`() {
+		val message = Assertions.assertThrows(UnauthenticatedException::class.java) {
+			eventService.findAllEventsByUuid(eventMount?.uuid)
+		}.message
+
+		assertEquals(message, "401 UNAUTHORIZED \"No esta autorizado para realizar esta acción\"")
+	}
+
+	@Test
+	@WithMockUser(username = "userMock", password = "pwd", roles = [])
+	fun `test to validate service when throw event not found`() {
+		val message = Assertions.assertThrows(NotFoundException::class.java) {
+			eventService.findAllEventsByUuid(UUID.randomUUID())
+		}.message
+
+		assertEquals(message, "404 NOT_FOUND \"No se encuentra el evento\"")
+	}
+
+	@Test
+	@WithMockUser(username = "userMock", password = "pwd", roles = [])
+	fun `test to validate service when user logged don't have team`() {
+		userMount?.team = null
+		userRepository.save(userMount!!)
+
+		val message = Assertions.assertThrows(NotFoundException::class.java) {
+			eventService.findAllEventsByUuid(UUID.randomUUID())
+		}.message
+
+		assertEquals(message, "404 NOT_FOUND \"No se encuentra el evento\"")
+	}
+
+	@Test
+	@WithMockUser(username = "userMockNotTeam", password = "pwd", roles = [])
+	fun `test to validate service when user logged don't have a correct team`() {
+		val user = User()
+		user.name = "userMock"
+		user.userName = "userMockNotTeam"
+		user.email = "no-realTeam@fake.com"
+		user.password = ""
+		user.enabled = true
+		user.active = true
+		userRepository.save(user)
+
+		val message = Assertions.assertThrows(UnauthenticatedException::class.java) {
+			eventService.findAllEventsByUuid(eventMount?.uuid)
+		}.message
+
+		assertEquals(message, "401 UNAUTHORIZED \"No esta autorizado para realizar esta acción\"")
 	}
 
 /*

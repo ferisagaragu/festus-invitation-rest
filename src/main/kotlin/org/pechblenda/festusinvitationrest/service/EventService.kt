@@ -181,7 +181,7 @@ class EventService(
 		val user = userRepository.findByUserName(
 			SecurityContextHolder.getContext().authentication.name
 		).orElseThrow {
-			BadRequestException("No esta autorizado para realizar esta acción")
+			UnauthenticatedException("No esta autorizado para realizar esta acción")
 		}
 
 		return user
