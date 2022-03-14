@@ -1,0 +1,40 @@
+{
+	"authorization": true,
+	"file": false,
+	"permissions": ["root"],
+	"description": "Service to get all events from user logged",
+	"responseOk": {
+		"timestamp": "01-10-2022  13:39:40 p. m.",
+		"status": 200
+	},
+	"responseCreated": {
+		"timestamp": "01-10-2022  13:39:40 p. m.",
+		"status": 201
+	},
+	"responseUnauthorized": {
+		"timestamp": "2022-01-05T01:24:10.787+00:00",
+		"status": 401,
+		"error": "Unauthorized",
+		"path": "your path"
+	},
+	"responseBadRequest": {
+		"timestamp": "2022-01-10T19:34:37.685+00:00",
+		"status": 400,
+		"error": "Bad Request",
+		"path": "your path"
+	},
+	"responseInternalServerError": {
+		"timestamp": "2022-01-10T19:34:37.685+00:00",
+		"status": 500,
+		"error": "Internal Server Error",
+		"path": "your path"
+	},
+	"pathVariables": [
+		{
+			"name": "eventUuid",
+			"value": "",
+			"type": "text",
+			"required": false
+		}
+	]
+}

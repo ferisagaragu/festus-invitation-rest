@@ -7,7 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest
 class FestusInvitationRestApplicationTests {
 
 	@Test
-	fun contextLoads() {
-	}
+	fun contextLoads() { }
 
 }

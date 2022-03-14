@@ -6,11 +6,15 @@ import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.Table
+import javax.persistence.ManyToMany
+import javax.persistence.PrePersist
+import javax.persistence.ManyToOne
 
 import org.pechblenda.auth.entity.IUser
 import org.pechblenda.auth.enums.AccountType
 
 import java.util.UUID
+import java.util.Date
 
 @Entity
 @Table(name = "users")
@@ -36,7 +40,15 @@ class User(
 	override var enabled: Boolean,
 
 	@Column(columnDefinition = "boolean default false")
-	override var active: Boolean
+	override var active: Boolean,
+
+	var createDate: Date?,
+
+	@ManyToOne
+	var team: Team?,
+
+	@ManyToMany
+	var events: MutableList<Event>?
 ): IUser {
 
 	constructor(): this(
@@ -51,7 +63,15 @@ class User(
 		userName = "",
 		email = "",
 		enabled = false,
-		active = false
+		active = false,
+		createDate = null,
+		team = null,
+		events = null
 	)
+
+	@PrePersist
+	fun onPrePersist() {
+		this.createDate = Date()
+	}
 
 }
