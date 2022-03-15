@@ -10,7 +10,6 @@ import org.pechblenda.service.Response
 import org.pechblenda.festusinvitationrest.repository.IEventRepository
 import org.pechblenda.festusinvitationrest.service.`interface`.IEventService
 import org.pechblenda.exception.NotFoundException
-import org.pechblenda.exception.BadRequestException
 import org.pechblenda.festusinvitationrest.entity.Event
 import org.pechblenda.festusinvitationrest.entity.User
 import org.pechblenda.festusinvitationrest.repository.IUserRepository
