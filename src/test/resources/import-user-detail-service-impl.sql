@@ -1,1 +1,0 @@
-INSERT INTO public.users (uuid, account_type, activate_password, active, email, enabled, mother_surname, name, password, photo, surname, user_name, create_date) VALUES ('166EAF01ABB44BCBB9917849DA0B4C68', 'DEFAULT', null, true, 'no-real-detail@fake.com', true, '', 'userMockDetail', '', '', '', 'userMockDetail', now());

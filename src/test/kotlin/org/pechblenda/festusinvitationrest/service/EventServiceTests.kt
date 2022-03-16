@@ -5,17 +5,16 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import org.junit.runner.RunWith
 
 import org.pechblenda.exception.NotFoundException
 import org.pechblenda.exception.UnauthenticatedException
 import org.pechblenda.festusinvitationrest.entity.Event
 import org.pechblenda.festusinvitationrest.entity.Team
-import org.pechblenda.festusinvitationrest.entity.User
 import org.pechblenda.festusinvitationrest.repository.IEventRepository
 import org.pechblenda.festusinvitationrest.repository.ITeamRepository
 import org.pechblenda.festusinvitationrest.repository.IUserRepository
 import org.pechblenda.service.Request
+import org.pechblenda.festusinvitationrest.entity.User
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -23,7 +22,6 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.context.TestPropertySource
 import org.springframework.test.context.jdbc.Sql
-import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.transaction.annotation.Transactional
 
 import java.util.UUID
@@ -31,7 +29,6 @@ import java.util.UUID
 @Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
-@RunWith(SpringRunner::class)
 @TestPropertySource(locations = ["classpath:application-test.properties"])
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Sql(scripts = ["/import-event-service.sql"], executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
