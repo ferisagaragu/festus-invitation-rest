@@ -51,45 +51,7 @@ class EventService(
 
 	@Transactional
 	override fun createEvent(request: Request): ResponseEntity<Any> {
-		request.validate(Validations(
-			Validation(
-				"name",
-				"El 'name' es requerido",
-				ValidationType.NOT_NULL,
-				ValidationType.NOT_BLANK,
-				ValidationType.EXIST
-			),
-			Validation(
-				"urlDataBase",
-				"El 'urlDataBase' es requerido",
-				ValidationType.NOT_NULL,
-				ValidationType.NOT_BLANK,
-				ValidationType.EXIST
-			),
-			Validation(
-				"endPointInvitation",
-				"El 'endPointInvitation' es requerido",
-				ValidationType.NOT_NULL,
-				ValidationType.NOT_BLANK,
-				ValidationType.EXIST
-			),
-			Validation(
-				"customTicket",
-				"El 'customTicket' es requerido",
-				ValidationType.NOT_NULL,
-				ValidationType.NOT_BLANK,
-				ValidationType.BOOLEAN,
-				ValidationType.EXIST
-			),
-			Validation(
-				"endDate",
-				"El 'endDate' es requerido",
-				ValidationType.NOT_NULL,
-				ValidationType.NOT_BLANK,
-				ValidationType.EXIST
-			)
-		))
-
+		request.validate(getValidations())
 		val authUser = getAuthorizeUser()
 		val users = userRepository.findAll().toMutableList()
 		val event = eventRepository.save(
@@ -122,44 +84,7 @@ class EventService(
 				ProtectField("createDate"),
 				ProtectField("user")
 			),
-			Validations(
-				Validation(
-					"name",
-					"El 'name' es requerido",
-					ValidationType.NOT_NULL,
-					ValidationType.NOT_BLANK,
-					ValidationType.EXIST
-				),
-				Validation(
-					"urlDataBase",
-					"El 'urlDataBase' es requerido",
-					ValidationType.NOT_NULL,
-					ValidationType.NOT_BLANK,
-					ValidationType.EXIST
-				),
-				Validation(
-					"endPointInvitation",
-					"El 'endPointInvitation' es requerido",
-					ValidationType.NOT_NULL,
-					ValidationType.NOT_BLANK,
-					ValidationType.EXIST
-				),
-				Validation(
-					"customTicket",
-					"El 'customTicket' es requerido",
-					ValidationType.NOT_NULL,
-					ValidationType.NOT_BLANK,
-					ValidationType.BOOLEAN,
-					ValidationType.EXIST
-				),
-				Validation(
-					"endDate",
-					"El 'endDate' es requerido",
-					ValidationType.NOT_NULL,
-					ValidationType.NOT_BLANK,
-					ValidationType.EXIST
-				)
-			)
+			getValidations()
 		)
 
 		return response.ok()
@@ -201,6 +126,47 @@ class EventService(
 		}
 
 		return event
+	}
+
+	private fun getValidations(): Validations {
+		return Validations(
+			Validation(
+				"name",
+				"El 'name' es requerido",
+				ValidationType.NOT_NULL,
+				ValidationType.NOT_BLANK,
+				ValidationType.EXIST
+			),
+			Validation(
+				"urlDataBase",
+				"El 'urlDataBase' es requerido",
+				ValidationType.NOT_NULL,
+				ValidationType.NOT_BLANK,
+				ValidationType.EXIST
+			),
+			Validation(
+				"endPointInvitation",
+				"El 'endPointInvitation' es requerido",
+				ValidationType.NOT_NULL,
+				ValidationType.NOT_BLANK,
+				ValidationType.EXIST
+			),
+			Validation(
+				"customTicket",
+				"El 'customTicket' es requerido",
+				ValidationType.NOT_NULL,
+				ValidationType.NOT_BLANK,
+				ValidationType.BOOLEAN,
+				ValidationType.EXIST
+			),
+			Validation(
+				"endDate",
+				"El 'endDate' es requerido",
+				ValidationType.NOT_NULL,
+				ValidationType.NOT_BLANK,
+				ValidationType.EXIST
+			)
+		)
 	}
 
 }
