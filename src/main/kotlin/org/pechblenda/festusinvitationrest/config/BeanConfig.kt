@@ -4,6 +4,7 @@ import org.pechblenda.auth.AuthController
 import org.pechblenda.doc.Documentation
 import org.pechblenda.festusinvitationrest.controller.EventController
 import org.pechblenda.festusinvitationrest.entity.Event
+import org.pechblenda.festusinvitationrest.entity.Team
 import org.pechblenda.festusinvitationrest.entity.User
 
 import org.springframework.context.annotation.Bean
@@ -19,7 +20,8 @@ class BeanConfig {
 		return Documentation(
 			mutableListOf(
 				User::class,
-				Event::class
+				Event::class,
+				Team::class
 			),
 			AuthController::class,
 			EventController::class
