@@ -23,6 +23,9 @@ import org.pechblenda.service.helper.ProtectField
 import org.pechblenda.service.helper.ProtectFields
 
 import java.util.UUID
+import java.util.Arrays
+
+import kotlin.streams.toList
 
 @Service
 class EventService(
@@ -47,6 +50,53 @@ class EventService(
 				eventUuid
 			)
 		).ok()
+	}
+
+	override fun generateChartSale(): ResponseEntity<Any> {
+		val out = mutableListOf<MutableMap<String, Any>>()
+
+		val years = Arrays.stream((
+			eventRepository.findAllCreateDate() +
+			eventRepository.findAllEndDate()
+		).toIntArray()).distinct().toList()
+
+		years.forEach { year ->
+			val element = mutableMapOf<String, Any>()
+			val data = mutableListOf<Double>()
+
+			for (i in 1..12) {
+				val monthYear = "${if (i <= 9) "0" else ""}$i/$year"
+				var priceTotal = 0.0
+
+				eventRepository.findAdvanceByMonthYear(monthYear).forEach { price ->
+					println(monthYear)
+					println(price)
+					priceTotal += if(price.isNotEmpty()) price
+						.replace("$", "")
+						.replace(",", "")
+						.replace(" MNX", "")
+						.toDouble() else 0.0
+				}
+
+				eventRepository.findRemainingByMonthYear(monthYear).forEach { price ->
+					println(monthYear)
+					println(price)
+					priceTotal += if(price.isNotEmpty()) price
+						.replace("$", "")
+						.replace(",", "")
+						.replace(" MNX", "")
+						.toDouble() else 0.0
+				}
+
+				data.add(priceTotal)
+			}
+
+			element["label"] = year
+			element["data"] = data
+			out.add(element)
+		}
+
+		return response.ok(out)
 	}
 
 	@Transactional
@@ -131,22 +181,29 @@ class EventService(
 	private fun getValidations(): Validations {
 		return Validations(
 			Validation(
-				"name",
-				"El 'name' es requerido",
+				"firstCoupleName",
+				"El 'firstCoupleName' es requerido",
 				ValidationType.NOT_NULL,
 				ValidationType.NOT_BLANK,
 				ValidationType.EXIST
 			),
 			Validation(
-				"urlDataBase",
-				"El 'urlDataBase' es requerido",
+				"secondCoupleName",
+				"El 'secondCoupleName' es requerido",
 				ValidationType.NOT_NULL,
 				ValidationType.NOT_BLANK,
 				ValidationType.EXIST
 			),
 			Validation(
-				"endPointInvitation",
-				"El 'endPointInvitation' es requerido",
+				"primaryColor",
+				"El 'primaryColor' es requerido",
+				ValidationType.NOT_NULL,
+				ValidationType.NOT_BLANK,
+				ValidationType.EXIST
+			),
+			Validation(
+				"secondaryColor",
+				"El 'secondaryColor' es requerido",
 				ValidationType.NOT_NULL,
 				ValidationType.NOT_BLANK,
 				ValidationType.EXIST
@@ -160,8 +217,22 @@ class EventService(
 				ValidationType.EXIST
 			),
 			Validation(
+				"price",
+				"El 'price' es requerido",
+				ValidationType.NOT_NULL,
+				ValidationType.NOT_BLANK,
+				ValidationType.EXIST
+			),
+			Validation(
 				"endDate",
 				"El 'endDate' es requerido",
+				ValidationType.NOT_NULL,
+				ValidationType.NOT_BLANK,
+				ValidationType.EXIST
+			),
+			Validation(
+				"eventDate",
+				"El 'eventDate' es requerido",
 				ValidationType.NOT_NULL,
 				ValidationType.NOT_BLANK,
 				ValidationType.EXIST

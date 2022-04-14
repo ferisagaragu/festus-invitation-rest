@@ -3,6 +3,7 @@ package org.pechblenda.festusinvitationrest.config
 import org.pechblenda.auth.AuthController
 import org.pechblenda.doc.Documentation
 import org.pechblenda.festusinvitationrest.controller.EventController
+import org.pechblenda.festusinvitationrest.controller.UserController
 import org.pechblenda.festusinvitationrest.entity.Event
 import org.pechblenda.festusinvitationrest.entity.Team
 import org.pechblenda.festusinvitationrest.entity.User
@@ -24,6 +25,7 @@ class BeanConfig {
 				Team::class
 			),
 			AuthController::class,
+			UserController::class,
 			EventController::class
 		)
 	}

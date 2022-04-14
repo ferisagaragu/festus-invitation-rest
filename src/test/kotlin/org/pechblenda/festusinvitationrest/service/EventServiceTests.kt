@@ -91,8 +91,8 @@ class EventServiceTests {
 
 		assertEquals(response.statusCodeValue, 200)
 		assertEquals(
-			((response.body as MutableMap<String, Any>)["data"] as MutableMap<String,Any>)["name"],
-			eventMount?.name
+			((response.body as MutableMap<String, Any>)["data"] as MutableMap<String,Any>)["firstCoupleName"],
+			eventMount?.firstCoupleName
 		)
 	}
 
