@@ -13,7 +13,7 @@ This project was generated with [Spring Boot](https://spring.io/projects/spring-
 
 ## Project verifications
 
-[![Java CI with Maven](https://github.com/ferisagaragu/festus-invitation-rest/actions/workflows/maven.yml/badge.svg?branch=master)](https://github.com/ferisagaragu/festus-invitation-rest/actions/workflows/maven.yml)
+[![Java CI with Maven](https://github.com/ferisagaragu/festus-invitation-rest/actions/workflows/maven.yml/badge.svg)](https://github.com/ferisagaragu/festus-invitation-rest/actions/workflows/maven.yml)
 
 ## Build
 
