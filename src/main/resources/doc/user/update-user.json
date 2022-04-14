@@ -1,8 +1,10 @@
 {
 	"authorization": true,
 	"file": false,
-	"permissions": ["root"],
-	"description": "Service to create event",
+	"bookmark": "mdi-information",
+	"permissions": ["USER_NORMAL"],
+	"description": "Service description",
+	"html": "<button>all so good</button>",
 	"responseOk": {
 		"timestamp": "01-10-2022  13:39:40 p. m.",
 		"status": 200
@@ -29,18 +31,27 @@
 		"error": "Internal Server Error",
 		"path": "your path"
 	},
-	"requestBody": {
-		"firstCoupleName": "FirstName",
-		"secondCoupleName": "SecondName",
-		"description": "Descripción de demo",
-		"providerUrl": "http://url-fake-data",
-		"providerType": "firebase",
-		"endPointInvitation": "http://url-fake-data/invitation",
-		"primaryColor": "#FFF",
-		"secondaryColor": "#000",
-		"customTicket": false,
-		"price": "0.00 MNX",
-		"endDate": "2022-04-10",
-		"eventDate": "2022-09-10"
-	}
+	"steps": [
+		{
+			"access": "post",
+			"mapping": "http://localhost:5000/api/#/rest/documentation/Auth/%2Frest%2Fauth%2Fsign-in/post"
+		}
+	],
+	"pathVariables": [
+		{
+			"name": "demoVariable",
+			"value": "",
+			"type": "text",
+			"required": false
+		}
+	],
+	"pathParams": [
+		{
+			"name": "demoVariable2",
+			"value": "",
+			"type": "text",
+			"required": false
+		}
+	],
+	"requestBody": { }
 }

@@ -1,8 +1,8 @@
 {
 	"authorization": true,
-	"file": false,
+	"file": true,
 	"permissions": ["root"],
-	"description": "Service to create event",
+	"description": "Service to get different user image",
 	"responseOk": {
 		"timestamp": "01-10-2022  13:39:40 p. m.",
 		"status": 200
@@ -28,19 +28,5 @@
 		"status": 500,
 		"error": "Internal Server Error",
 		"path": "your path"
-	},
-	"requestBody": {
-		"firstCoupleName": "FirstName",
-		"secondCoupleName": "SecondName",
-		"description": "Descripción de demo",
-		"providerUrl": "http://url-fake-data",
-		"providerType": "firebase",
-		"endPointInvitation": "http://url-fake-data/invitation",
-		"primaryColor": "#FFF",
-		"secondaryColor": "#000",
-		"customTicket": false,
-		"price": "0.00 MNX",
-		"endDate": "2022-04-10",
-		"eventDate": "2022-09-10"
 	}
 }

@@ -23,7 +23,7 @@ import java.util.UUID
 @CrossOrigin(methods = [
 	RequestMethod.GET,
 	RequestMethod.POST,
-	RequestMethod.PATCH,
+	RequestMethod.PUT,
 	RequestMethod.DELETE
 ])
 @RestController
@@ -40,6 +40,16 @@ class EventController(
 	): ResponseEntity<Any> {
 		return try {
 			eventService.findAllEventsByUuid(eventUuid)
+		} catch (e: ResponseStatusException) {
+			httpExceptionResponse.error(e)
+		}
+	}
+
+	@GetMapping(value = ["/generate-chart-sale"])
+	@ApiDocumentation(path = "doc/event/generate-chart-sale.json")
+	fun generateChartSale(): ResponseEntity<Any> {
+		return try {
+			eventService.generateChartSale()
 		} catch (e: ResponseStatusException) {
 			httpExceptionResponse.error(e)
 		}

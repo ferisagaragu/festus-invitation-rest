@@ -14,28 +14,41 @@ class EventTests {
 		val uuid = UUID.randomUUID()
 		val event = Event(
 			uuid = uuid,
-			name = "",
+			firstCoupleName = "",
+			secondCoupleName = "",
 			description = "",
-			urlDataBase = "",
+			providerUrl = "",
+			providerType = "",
 			endPointInvitation = "",
 			primaryColor = "",
-			accentColor = "",
+			secondaryColor = "",
 			customTicket = false,
+			price = 0.0,
+			type = "",
+			advance = "",
+			remaining = "",
 			endDate = null,
+			eventDate = null,
 			createDate = null,
+			delete = false,
 			users = null
 		)
 
 		assert(event.uuid == uuid)
-		assert(event.name == "")
+		assert(event.firstCoupleName == "")
+		assert(event.secondCoupleName == "")
 		assert(event.description == "")
-		assert(event.urlDataBase == "")
+		assert(event.providerUrl == "")
+		assert(event.providerType == "")
 		assert(event.endPointInvitation == "")
 		assert(event.primaryColor == "")
-		assert(event.accentColor == "")
+		assert(event.secondaryColor == "")
 		assert(!event.customTicket)
+		assert(event.price == 0.0)
 		assert(event.endDate == null)
+		assert(event.eventDate == null)
 		assert(event.createDate == null)
+		assert(!event.delete)
 		assert(event.users == null)
 	}
 
@@ -51,27 +64,35 @@ class EventTests {
 		val event = Event()
 
 		event.uuid = uuid
-		event.name = "name"
+		event.firstCoupleName = "name"
+		event.secondCoupleName = "name2"
 		event.description = "description"
-		event.urlDataBase = "urlDataBase"
+		event.providerUrl = "urlDataBase"
 		event.endPointInvitation = "endPointInvitation"
+		event.providerType = "firebase"
 		event.primaryColor = "primaryColor"
-		event.accentColor = "accentColor"
+		event.secondaryColor = "accentColor"
 		event.customTicket = true
 		event.endDate = null
+		event.eventDate = null
 		event.createDate = null
+		event.delete = false
 		event.users = null
 
 		assert(event.uuid == uuid)
-		assert(event.name == "name")
+		assert(event.firstCoupleName == "name")
+		assert(event.secondCoupleName == "name2")
 		assert(event.description == "description")
-		assert(event.urlDataBase == "urlDataBase")
+		assert(event.providerUrl == "urlDataBase")
+		assert(event.providerType == "firebase")
 		assert(event.endPointInvitation == "endPointInvitation")
 		assert(event.primaryColor == "primaryColor")
-		assert(event.accentColor == "accentColor")
+		assert(event.secondaryColor == "accentColor")
 		assert(event.customTicket)
 		assert(event.endDate == null)
+		assert(event.eventDate == null)
 		assert(event.createDate == null)
+		assert(!event.delete)
 		assert(event.users == null)
 	}
 

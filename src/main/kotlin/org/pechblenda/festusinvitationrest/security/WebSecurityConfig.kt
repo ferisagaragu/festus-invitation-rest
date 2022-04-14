@@ -2,6 +2,7 @@ package org.pechblenda.festusinvitationrest.security
 
 import org.pechblenda.auth.AuthController
 import org.pechblenda.auth.service.AuthService
+import org.pechblenda.auth.util.ContextApp
 import org.pechblenda.festusinvitationrest.entity.User
 import org.pechblenda.security.JwtAuthEntryPoint
 import org.pechblenda.security.JwtAuthTokenFilter
@@ -35,6 +36,9 @@ class WebSecurityConfig: WebSecurityConfigurerAdapter() {
 
 	@Autowired
 	private lateinit var jwtProvider: JwtProvider
+
+	@Autowired
+	private lateinit var authRepository: IAuthRepository
 
 	override fun configure(authenticationManagerBuilder: AuthenticationManagerBuilder) {
 		authenticationManagerBuilder
@@ -84,7 +88,6 @@ class WebSecurityConfig: WebSecurityConfigurerAdapter() {
 	}
 
 	@Bean
-	@Throws(Exception::class)
 	override fun authenticationManagerBean(): AuthenticationManager {
 		return super.authenticationManagerBean()
 	}
@@ -97,6 +100,11 @@ class WebSecurityConfig: WebSecurityConfigurerAdapter() {
 	@Bean
 	fun authController(): AuthController {
 		return AuthController()
+	}
+
+	@Bean
+	fun contextApp(): ContextApp {
+		return ContextApp(authRepository)
 	}
 
 }
