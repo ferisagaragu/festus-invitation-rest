@@ -12,6 +12,7 @@ import javax.persistence.Column
 import java.util.Date
 import java.util.UUID
 import java.util.concurrent.TimeUnit
+import javax.persistence.Lob
 
 import org.pechblenda.service.annotation.Key
 import org.pechblenda.service.enum.DefaultValue
@@ -24,7 +25,10 @@ class Event(
 	var uuid: UUID,
 	var firstCoupleName: String,
 	var secondCoupleName: String,
+
+	@Lob
 	var description: String,
+
 	var providerUrl: String,
 	var providerType: String,
 	var endPointInvitation: String,

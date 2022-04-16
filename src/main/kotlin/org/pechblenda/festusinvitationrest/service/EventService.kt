@@ -79,8 +79,6 @@ class EventService(
 				}
 
 				eventRepository.findRemainingByMonthYear(monthYear).forEach { price ->
-					println(monthYear)
-					println(price)
 					priceTotal += if(price.isNotEmpty()) price
 						.replace("$", "")
 						.replace(",", "")
