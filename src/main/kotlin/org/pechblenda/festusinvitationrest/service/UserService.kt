@@ -13,8 +13,6 @@ import org.pechblenda.service.enum.IdType
 import org.pechblenda.service.helper.EntityParse
 import org.pechblenda.service.helper.ProtectField
 import org.pechblenda.service.helper.ProtectFields
-import org.pechblenda.service.helper.Validation
-import org.pechblenda.service.helper.Validations
 import org.pechblenda.auth.util.ContextApp
 import org.pechblenda.core.shared.DynamicResources
 
@@ -59,24 +57,6 @@ class UserService(
 				ProtectField("active"),
 				ProtectField("team"),
 				ProtectField("events")
-			),
-			Validations(
-				Validation(
-					"name",
-					"El name es requerido"
-				),
-				Validation(
-					"surname",
-					"El surname es requerido"
-				),
-				Validation(
-					"motherSurname",
-					"El motherSurname es requerido"
-				),
-				Validation(
-					"photo",
-					"El motherSurname es requerido"
-				)
 			)
 		)
 

@@ -69,8 +69,6 @@ class EventService(
 				var priceTotal = 0.0
 
 				eventRepository.findAdvanceByMonthYear(monthYear).forEach { price ->
-					println(monthYear)
-					println(price)
 					priceTotal += if(price.isNotEmpty()) price
 						.replace("$", "")
 						.replace(",", "")
@@ -99,7 +97,7 @@ class EventService(
 
 	@Transactional
 	override fun createEvent(request: Request): ResponseEntity<Any> {
-		request.validate(getValidations())
+		request.validate(getValidations(false))
 		val authUser = getAuthorizeUser()
 		val users = userRepository.findAll().toMutableList()
 		val event = eventRepository.save(
@@ -130,9 +128,11 @@ class EventService(
 			ProtectFields(
 				ProtectField("uuid"),
 				ProtectField("createDate"),
+				ProtectField("endDate"),
+				ProtectField("eventDate"),
 				ProtectField("user")
 			),
-			getValidations()
+			getValidations(true)
 		)
 
 		return response.ok()
@@ -176,66 +176,40 @@ class EventService(
 		return event
 	}
 
-	private fun getValidations(): Validations {
-		return Validations(
-			Validation(
-				"firstCoupleName",
-				"El 'firstCoupleName' es requerido",
-				ValidationType.NOT_NULL,
-				ValidationType.NOT_BLANK,
-				ValidationType.EXIST
-			),
-			Validation(
-				"secondCoupleName",
-				"El 'secondCoupleName' es requerido",
-				ValidationType.NOT_NULL,
-				ValidationType.NOT_BLANK,
-				ValidationType.EXIST
-			),
-			Validation(
-				"primaryColor",
-				"El 'primaryColor' es requerido",
-				ValidationType.NOT_NULL,
-				ValidationType.NOT_BLANK,
-				ValidationType.EXIST
-			),
-			Validation(
-				"secondaryColor",
-				"El 'secondaryColor' es requerido",
-				ValidationType.NOT_NULL,
-				ValidationType.NOT_BLANK,
-				ValidationType.EXIST
-			),
-			Validation(
-				"customTicket",
-				"El 'customTicket' es requerido",
-				ValidationType.NOT_NULL,
-				ValidationType.NOT_BLANK,
-				ValidationType.BOOLEAN,
-				ValidationType.EXIST
-			),
-			Validation(
-				"price",
-				"El 'price' es requerido",
-				ValidationType.NOT_NULL,
-				ValidationType.NOT_BLANK,
-				ValidationType.EXIST
-			),
-			Validation(
-				"endDate",
-				"El 'endDate' es requerido",
-				ValidationType.NOT_NULL,
-				ValidationType.NOT_BLANK,
-				ValidationType.EXIST
-			),
-			Validation(
-				"eventDate",
-				"El 'eventDate' es requerido",
-				ValidationType.NOT_NULL,
-				ValidationType.NOT_BLANK,
-				ValidationType.EXIST
-			)
-		)
+	private fun getValidations(update: Boolean): Validations {
+		val validations = arrayListOf(
+			"firstCoupleName",
+			"secondCoupleName",
+			"primaryColor",
+			"secondaryColor",
+			"customTicket",
+			"endDate",
+			"eventDate"
+		).mapNotNull { validation ->
+			if (update) {
+				if ((validation != "endDate") && (validation != "eventDate")) {
+					Validation(
+						validation,
+						"El '$validation' es requerido",
+						ValidationType.NOT_NULL,
+						ValidationType.NOT_BLANK,
+						ValidationType.EXIST
+					)
+				} else {
+					null
+				}
+			} else {
+				Validation(
+					validation,
+					"El '$validation' es requerido",
+					ValidationType.NOT_NULL,
+					ValidationType.NOT_BLANK,
+					ValidationType.EXIST
+				)
+			}
+		}
+
+		return Validations(*validations.toTypedArray())
 	}
 
 }

@@ -31,11 +31,7 @@ class UserController(
 	@GetMapping("/refresh-user-image")
 	@ApiDocumentation(path = "doc/user/refresh-user-image.json")
 	fun refreshUserImage(servletRequest: HttpServletRequest): ResponseEntity<Any> {
-		return try {
-			userService.refreshUserImage(servletRequest)
-		} catch (e: ResponseStatusException) {
-			httpExceptionResponse.error(e)
-		}
+		return userService.refreshUserImage(servletRequest)
 	}
 
 	@PutMapping

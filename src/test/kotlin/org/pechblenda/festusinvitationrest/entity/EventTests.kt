@@ -1,7 +1,11 @@
 package org.pechblenda.festusinvitationrest.entity
 
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.TimeZone
 import java.util.UUID
 
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 import org.springframework.boot.test.context.SpringBootTest
@@ -77,6 +81,10 @@ class EventTests {
 		event.eventDate = null
 		event.createDate = null
 		event.delete = false
+		event.type = "firebase"
+		event.advance = "$0.00 MNX"
+		event.remaining = "$0.00 MNX"
+		event.price = 0.0
 		event.users = null
 
 		assert(event.uuid == uuid)
@@ -93,7 +101,65 @@ class EventTests {
 		assert(event.eventDate == null)
 		assert(event.createDate == null)
 		assert(!event.delete)
+		assert(event.type == "firebase")
+		assert(event.advance == "$0.00 MNX")
+		assert(event.remaining == "$0.00 MNX")
+		assert(event.price == 0.0)
 		assert(event.users == null)
+	}
+
+	@Test
+	fun `call generate name method`() {
+		val event = Event()
+		event.firstCoupleName = "Ale"
+		event.secondCoupleName = "Fer"
+		assert(event.generateName() == "Ale & Fer")
+	}
+
+	@Test
+	fun `call generate type array`() {
+		val event = Event()
+		event.type = "webPage,pdf"
+		assert((event.generateTypeArray() as ArrayList<String>).size == 2)
+	}
+
+	@Test
+	fun `call generate remaining day and missing day`() {
+		val formatter = SimpleDateFormat("yyyy-MM-dd")
+		val event = Event()
+
+		formatter.timeZone = TimeZone.getTimeZone("America/Los_Angeles");
+		event.endDate = formatter.parse("2022-05-15")
+		event.createDate = formatter.parse("2022-04-18")
+
+		assert(event.generateRemainingDay() is Long)
+		assert(event.generateMissingDay() is Long)
+		assert(event.generatePercentage() is Long)
+	}
+
+	@Test
+	fun `call generate remaining day and missing day with nulls`() {
+		val event = Event()
+
+		val messageRemainingDay = Assertions.assertThrows(NullPointerException::class.java) {
+			event.generateRemainingDay()
+		}
+
+		event.endDate = Date(1655527495)
+
+		val messageRemainingDayValidation = Assertions.assertThrows(NullPointerException::class.java) {
+			event.generateRemainingDay()
+		}
+
+		event.endDate = null
+
+		val messageMissingDay = Assertions.assertThrows(NullPointerException::class.java) {
+			event.generateMissingDay()
+		}
+
+		assert(messageRemainingDay is NullPointerException)
+		assert(messageRemainingDayValidation is NullPointerException)
+		assert(messageMissingDay is NullPointerException)
 	}
 
 }

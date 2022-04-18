@@ -48,11 +48,7 @@ class EventController(
 	@GetMapping(value = ["/generate-chart-sale"])
 	@ApiDocumentation(path = "doc/event/generate-chart-sale.json")
 	fun generateChartSale(): ResponseEntity<Any> {
-		return try {
-			eventService.generateChartSale()
-		} catch (e: ResponseStatusException) {
-			httpExceptionResponse.error(e)
-		}
+		return eventService.generateChartSale()
 	}
 
 	@PostMapping
