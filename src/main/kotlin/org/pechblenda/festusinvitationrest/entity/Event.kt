@@ -107,7 +107,11 @@ class Event(
 
 	@Key(name = "percentage", autoCall = true, defaultNullValue = DefaultValue.NUMBER)
 	fun generatePercentage(): Long {
-		return 100 - (generateMissingDay() * 100) / generateRemainingDay()
+		return try {
+			100 - (generateMissingDay() * 100) / generateRemainingDay()
+		} catch(e: Exception) {
+			100
+		}
 	}
 
 }

@@ -57,7 +57,7 @@ class EventControllerTests {
 	@Test
 	fun `get event by uuid`() {
 		val response = mockMvc.perform(
-			get("/rest/events/1c8b5f79-0430-4226-b200-d653098be798")
+			get("/rest/events/228226b7-f906-4eb1-889a-4c8a4f1f8d97")
 				.header(HttpHeaders.AUTHORIZATION, "Bearer $token")
 		).andDo(print())
 			.andExpect(status().isOk)
@@ -104,12 +104,13 @@ class EventControllerTests {
 	@Test
 	fun `create event`() {
 		val requestBody = Request()
-		requestBody["name"] = "Evento de demostración"
-		requestBody["description"] = "Descripción de demo"
-		requestBody["urlDataBase"] = "nada"
-		requestBody["endPointInvitation"] = "nada"
+		requestBody["firstCoupleName"] = "Dony"
+		requestBody["secondCoupleName"] = "Shanon"
+		requestBody["primaryColor"] = "#FFF"
+		requestBody["secondaryColor"] = "#000"
 		requestBody["customTicket"] = false
 		requestBody["endDate"] = "2022-04-10"
+		requestBody["eventDate"] = "2022-06-10"
 
 		mockMvc.perform(
 			post("/rest/events")
@@ -143,15 +144,16 @@ class EventControllerTests {
 	@Test
 	fun `update event`() {
 		val requestBody = Request()
-		requestBody["name"] = "Fake name"
-		requestBody["description"] = "Descripción de demo"
-		requestBody["urlDataBase"] = "nada"
-		requestBody["endPointInvitation"] = "nada"
-		requestBody["customTicket"] = false
+		requestBody["firstCoupleName"] = "Dony"
+		requestBody["secondCoupleName"] = "Verguer"
+		requestBody["primaryColor"] = "#FFF"
+		requestBody["secondaryColor"] = "#000"
+		requestBody["customTicket"] = true
 		requestBody["endDate"] = "2022-04-10"
+		requestBody["eventDate"] = "2022-06-10"
 
-		mockMvc.perform(
-			put("/rest/events/1c8b5f79-0430-4226-b200-d653098be798")
+		val resp = mockMvc.perform(
+			put("/rest/events/228226b7-f906-4eb1-889a-4c8a4f1f8d97")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(requestBody.toJSON())
 				.header(HttpHeaders.AUTHORIZATION, "Bearer $token")
@@ -163,14 +165,12 @@ class EventControllerTests {
 	@Test
 	fun `update event bad request`() {
 		val requestBody = Request()
-		requestBody["description"] = "Descripción de demo"
-		requestBody["urlDataBase"] = "nada"
-		requestBody["endPointInvitation"] = "nada"
-		requestBody["customTicket"] = false
-		requestBody["endDate"] = "2022-04-10"
+		requestBody["firstCoupleName"] = "Dony"
+		requestBody["secondCoupleName"] = "Verguer"
+		requestBody["customTicket"] = true
 
 		mockMvc.perform(
-			put("/rest/events/1c8b5f79-0430-4226-b200-d653098be798")
+			put("/rest/events/228226b7-f906-4eb1-889a-4c8a4f1f8d97")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(requestBody.toJSON())
 				.header(HttpHeaders.AUTHORIZATION, "Bearer $token")
@@ -182,7 +182,7 @@ class EventControllerTests {
 	@Test
 	fun `delete event`() {
 		mockMvc.perform(
-			delete("/rest/events/b6374b9f-1e3c-4ab3-a7d3-6a0f9ae4eee2")
+			delete("/rest/events/228226b7-f906-4eb1-889a-4c8a4f1f8d98")
 				.contentType(MediaType.APPLICATION_JSON)
 				.header(HttpHeaders.AUTHORIZATION, "Bearer $token")
 		).andDo(print())
@@ -198,6 +198,17 @@ class EventControllerTests {
 				.header(HttpHeaders.AUTHORIZATION, "Bearer $token")
 		).andDo(print())
 			.andExpect(status().isNotFound)
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+	}
+
+	@Test
+	fun `generate chart sale from events`() {
+		mockMvc.perform(
+			get("/rest/events/generate-chart-sale")
+				.contentType(MediaType.APPLICATION_JSON)
+				.header(HttpHeaders.AUTHORIZATION, "Bearer $token")
+		).andDo(print())
+			.andExpect(status().isOk)
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 	}
 

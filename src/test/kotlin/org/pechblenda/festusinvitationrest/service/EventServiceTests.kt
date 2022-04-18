@@ -80,7 +80,7 @@ class EventServiceTests {
 		assertEquals(response.statusCodeValue, 200)
 		assertEquals(
 			((response.body as MutableMap<String, Any>)["data"] as MutableList<Any>).size,
-			2
+			3
 		)
 	}
 
@@ -144,11 +144,13 @@ class EventServiceTests {
 	@WithMockUser(username = "userMock", password = "pwd", roles = [])
 	fun `when create event`() {
 		val request = Request()
-		request["name"] = "Fake event request"
-		request["urlDataBase"] = "none"
-		request["endPointInvitation"] = "none"
+		request["firstCoupleName"] = "Dony"
+		request["secondCoupleName"] = "Shanon"
+		request["primaryColor"] = "#FFF"
+		request["secondaryColor"] = "#000"
 		request["customTicket"] = false
-		request["endDate"] = "2022-02-14"
+		request["endDate"] = "2022-04-10"
+		request["eventDate"] = "2022-06-10"
 
 		val response = eventService.createEvent(request)
 
@@ -159,11 +161,13 @@ class EventServiceTests {
 	@WithMockUser(username = "userMockBad", password = "pwd", roles = [])
 	fun `throw event bad request for unauthenticated user`() {
 		val request = Request()
-		request["name"] = "Fake event request"
-		request["urlDataBase"] = "none"
-		request["endPointInvitation"] = "none"
+		request["firstCoupleName"] = "Dony"
+		request["secondCoupleName"] = "Shanon"
+		request["primaryColor"] = "#FFF"
+		request["secondaryColor"] = "#000"
 		request["customTicket"] = false
-		request["endDate"] = "2022-02-14"
+		request["endDate"] = "2022-04-10"
+		request["eventDate"] = "2022-06-10"
 
 		val message = Assertions.assertThrows(UnauthenticatedException::class.java) {
 			eventService.createEvent(request)
@@ -176,11 +180,13 @@ class EventServiceTests {
 	@WithMockUser(username = "userMockNotTeam", password = "pwd", roles = [])
 	fun `when event is create without team on the user`() {
 		val request = Request()
-		request["name"] = "Fake event request"
-		request["urlDataBase"] = "none"
-		request["endPointInvitation"] = "none"
+		request["firstCoupleName"] = "Dony"
+		request["secondCoupleName"] = "Thestaverguer"
+		request["primaryColor"] = "#FFF"
+		request["secondaryColor"] = "#000"
 		request["customTicket"] = false
-		request["endDate"] = "2022-02-14"
+		request["endDate"] = "2022-04-10"
+		request["eventDate"] = "2022-06-10"
 
 		val response = eventService.createEvent(request)
 
@@ -193,11 +199,13 @@ class EventServiceTests {
 		val user = userRepository.findByUserName("userMockNotEvents").get()
 		user.events = null
 		val request = Request()
-		request["name"] = "Fake event request"
-		request["urlDataBase"] = "none"
-		request["endPointInvitation"] = "none"
+		request["firstCoupleName"] = "Dony"
+		request["secondCoupleName"] = "Shanon"
+		request["primaryColor"] = "#FFF"
+		request["secondaryColor"] = "#000"
 		request["customTicket"] = false
-		request["endDate"] = "2022-02-14"
+		request["endDate"] = "2022-04-10"
+		request["eventDate"] = "2022-06-10"
 
 		val response = eventService.createEvent(request)
 
@@ -208,11 +216,13 @@ class EventServiceTests {
 	@WithMockUser(username = "userMock", password = "pwd", roles = [])
 	fun `when event is update`() {
 		val request = Request()
-		request["name"] = "Fake event request"
-		request["urlDataBase"] = "none"
-		request["endPointInvitation"] = "none"
-		request["customTicket"] = false
-		request["endDate"] = "2022-02-14"
+		request["firstCoupleName"] = "Dony"
+		request["secondCoupleName"] = "Verguer"
+		request["primaryColor"] = "#FFF"
+		request["secondaryColor"] = "#000"
+		request["customTicket"] = true
+		request["endDate"] = "2022-04-10"
+		request["eventDate"] = "2022-06-10"
 
 		val response = eventService.updateEvent(
 			UUID.fromString("501e6f70-1c87-46ea-9c6f-2f38e4333e1c"),
@@ -262,6 +272,13 @@ class EventServiceTests {
 		}.message
 
 		assertEquals(message, "401 UNAUTHORIZED \"No esta autorizado para realizar esta acción\"")
+	}
+
+	@Test
+	@WithMockUser(username = "userMock", password = "pwd", roles = [])
+	fun `when call generate chart sale`() {
+		val response = eventService.generateChartSale()
+		assertEquals(response.statusCodeValue, 200)
 	}
 
 }
