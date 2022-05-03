@@ -87,6 +87,11 @@ class EventService(
 				data.add(priceTotal)
 			}
 
+
+
+
+
+
 			element["label"] = year
 			element["data"] = data
 			out.add(element)
