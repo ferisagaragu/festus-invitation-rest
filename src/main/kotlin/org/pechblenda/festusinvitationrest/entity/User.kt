@@ -8,7 +8,6 @@ import javax.persistence.Id
 import javax.persistence.Table
 import javax.persistence.ManyToMany
 import javax.persistence.PrePersist
-import javax.persistence.ManyToOne
 
 import org.pechblenda.auth.entity.IUser
 import org.pechblenda.auth.enums.AccountType
@@ -44,9 +43,6 @@ class User(
 
 	var createDate: Date?,
 
-	@ManyToOne
-	var team: Team?,
-
 	@ManyToMany
 	var events: MutableList<Event>?
 ): IUser {
@@ -65,7 +61,6 @@ class User(
 		enabled = false,
 		active = false,
 		createDate = null,
-		team = null,
 		events = null
 	)
 

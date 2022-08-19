@@ -1,21 +1,22 @@
 package org.pechblenda.festusinvitationrest.entity
 
+import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
-import javax.persistence.ManyToMany
-import javax.persistence.PrePersist
-import javax.persistence.Table
-import javax.persistence.Column
-
-import java.util.Date
-import java.util.UUID
-import java.util.concurrent.TimeUnit
 import javax.persistence.Lob
+import javax.persistence.ManyToMany
+import javax.persistence.Table
 
 import org.pechblenda.service.annotation.Key
 import org.pechblenda.service.enum.DefaultValue
+
+import java.util.UUID
+import java.util.Date
+import java.util.concurrent.TimeUnit
+
+import java.text.SimpleDateFormat
 
 @Entity
 @Table(name = "events")
@@ -72,10 +73,10 @@ class Event(
 		users = null
 	)
 
-	@PrePersist
+	/*@PrePersist
 	fun onPrePersist() {
 		createDate = Date()
-	}
+	}*/
 
 	@Key(name = "name", autoCall = true, defaultNullValue = DefaultValue.TEXT)
 	fun generateName(): String {
@@ -112,6 +113,17 @@ class Event(
 		} catch(e: Exception) {
 			100
 		}
+	}
+
+	@Key(name = "active", autoCall = true, defaultNullValue = DefaultValue.BOOLEAN)
+	fun generateActive(): Boolean {
+		val formatter = SimpleDateFormat("yyyy/MMM/dd ")
+
+		if (formatter.format(Date()) == formatter.format(endDate)) {
+			return true
+		}
+
+		return Date() < endDate
 	}
 
 }

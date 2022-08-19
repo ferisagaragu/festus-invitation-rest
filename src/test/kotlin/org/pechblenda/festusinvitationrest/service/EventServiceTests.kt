@@ -9,9 +9,7 @@ import org.junit.jupiter.api.TestInstance
 import org.pechblenda.exception.NotFoundException
 import org.pechblenda.exception.UnauthenticatedException
 import org.pechblenda.festusinvitationrest.entity.Event
-import org.pechblenda.festusinvitationrest.entity.Team
 import org.pechblenda.festusinvitationrest.repository.IEventRepository
-import org.pechblenda.festusinvitationrest.repository.ITeamRepository
 import org.pechblenda.festusinvitationrest.repository.IUserRepository
 import org.pechblenda.service.Request
 import org.pechblenda.festusinvitationrest.entity.User
@@ -43,14 +41,10 @@ class EventServiceTests {
 	@Autowired
 	private lateinit var userRepository: IUserRepository
 
-	@Autowired
-	private lateinit var teamRepository: ITeamRepository
-
 	private var init = true
 	private var restore = false
 	private var eventMount: Event? = null
 	private var userMount: User? = null
-	private var teamMount: Team? = null
 
 	@BeforeEach
 	fun beforeEach() {
@@ -60,13 +54,11 @@ class EventServiceTests {
 	fun restoreEvent() {
 		if (init) {
 			userMount = userRepository.findById(UUID.fromString("0e41ba83-6bc3-4655-b573-25fda614b988")).get()
-			teamMount = teamRepository.findById(UUID.fromString("1b09dd22-9c89-4535-b579-b0956fd95632")).get()
 			eventMount = eventRepository.findById(UUID.fromString("501e6f70-1c87-46ea-9c6f-2f38e4333e1c")).get()
 			init = false
 		}
 
 		if (restore) {
-			userMount?.team = teamMount
 			userRepository.save(userMount!!)
 			restore = false
 		}
@@ -120,7 +112,6 @@ class EventServiceTests {
 	@WithMockUser(username = "userMock", password = "pwd", roles = [])
 	fun `when user logged don't have team`() {
 		restore = true
-		userMount?.team = null
 		userRepository.save(userMount!!)
 
 		val message = Assertions.assertThrows(NotFoundException::class.java) {

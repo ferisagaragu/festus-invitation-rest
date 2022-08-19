@@ -9,7 +9,6 @@ import org.pechblenda.service.Request
 import org.pechblenda.service.Response
 import org.pechblenda.festusinvitationrest.repository.IEventRepository
 import org.pechblenda.festusinvitationrest.service.`interface`.IEventService
-import org.pechblenda.exception.NotFoundException
 import org.pechblenda.festusinvitationrest.entity.Event
 import org.pechblenda.festusinvitationrest.entity.User
 import org.pechblenda.festusinvitationrest.repository.IUserRepository
@@ -45,10 +44,7 @@ class EventService(
 		}
 
 		return response.toMap(
-			checkAuthorizeUser(
-				authUser.team?.name,
-				eventUuid
-			)
+			eventRepository.findById(eventUuid)
 		).ok()
 	}
 
@@ -87,11 +83,6 @@ class EventService(
 				data.add(priceTotal)
 			}
 
-
-
-
-
-
 			element["label"] = year
 			element["data"] = data
 			out.add(element)
@@ -109,11 +100,8 @@ class EventService(
 			request.to<Event>(Event::class)
 		)
 
-		users.forEach { user ->
-			if (user.team?.name == authUser.team?.name) {
-				user.events?.add(event)
-			}
-		}
+		users.forEach { user -> user.events?.add(event) }
+		eventRepository.save(event)
 
 		return response.created()
 	}
@@ -121,7 +109,6 @@ class EventService(
 	@Transactional
 	override fun updateEvent(eventUuid: UUID, request: Request): ResponseEntity<Any> {
 		val authUser = getAuthorizeUser()
-		checkAuthorizeUser(authUser.team?.name, eventUuid)
 
 		request["uuid"] = eventUuid.toString()
 		request.merge<Event>(
@@ -146,10 +133,11 @@ class EventService(
 	@Transactional
 	override fun deleteEvent(eventUuid: UUID): ResponseEntity<Any> {
 		val authUser = getAuthorizeUser()
-		val event = checkAuthorizeUser(authUser.team?.name, eventUuid)
 
+		/*
 		eventRepository.deleteRelation(event.uuid)
 		eventRepository.delete(event)
+		 */
 
 		return response.ok()
 	}
@@ -162,23 +150,6 @@ class EventService(
 		}
 
 		return user
-	}
-
-	private fun checkAuthorizeUser(teamName: String?, eventUuid: UUID): Event {
-		val event = eventRepository.findById(eventUuid).orElseThrow {
-			NotFoundException("No se encuentra el evento")
-		}
-
-		val eventAuth = eventRepository.checkTeamNameAndEventUuid(
-			teamName,
-			eventUuid
-		)
-
-		if (!eventAuth) {
-			throw UnauthenticatedException("No esta autorizado para realizar esta acción")
-		}
-
-		return event
 	}
 
 	private fun getValidations(update: Boolean): Validations {

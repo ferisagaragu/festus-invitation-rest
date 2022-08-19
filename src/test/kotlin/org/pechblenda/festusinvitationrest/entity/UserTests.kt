@@ -28,7 +28,6 @@ class UserTests {
 			enabled = false,
 			active = false,
 			createDate = null,
-			team = null,
 			events = null
 		)
 
@@ -45,7 +44,6 @@ class UserTests {
 		assert(!user.enabled)
 		assert(!user.active)
 		assert(user.createDate == null)
-		assert(user.team == null)
 		assert(user.events == null)
 	}
 
@@ -73,7 +71,6 @@ class UserTests {
 		user.enabled = true
 		user.active = true
 		user.createDate = null
-		user.team = null
 		user.events = null
 
 		assert(user.uuid == uuid)
@@ -89,7 +86,6 @@ class UserTests {
 		assert(user.enabled)
 		assert(user.active)
 		assert(user.createDate == null)
-		assert(user.team == null)
 		assert(user.events == null)
 	}
 

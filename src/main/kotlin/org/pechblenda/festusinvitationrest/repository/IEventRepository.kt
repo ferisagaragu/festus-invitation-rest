@@ -17,17 +17,6 @@ interface IEventRepository: JpaRepository<Event, UUID> {
 	fun findAllByUserUuid(userUuid: UUID): MutableList<Event>
 
 	@Query(
-		"select (count(event) > 0) from Event event " +
-		"inner join event.users user " +
-		"inner join user.team team " +
-		"where team.name = :teamName and event.uuid = :eventUuid"
-	)
-	fun checkTeamNameAndEventUuid(
-		teamName: String?,
-		eventUuid: UUID
-	): Boolean
-
-	@Query(
 		value = "select distinct EXTRACT(year from create_date) from events",
 		nativeQuery = true
 	)
